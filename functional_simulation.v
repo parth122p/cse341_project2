@@ -121,8 +121,9 @@ module testbench();
     addsub32 adder(A, B, SUB, ans, cout, V);
     
     initial begin
-        $monitor($time,,"A=%h, B=%h, SUB=%b, ans=%h, cout=%b, V=%b", A, B, SUB, ans, cout, V); // print whenever a value changes
-        $display($time,,"A=%h, B=%h, SUB=%b, ans=%h, cout=%b, V=%b", A, B, SUB, ans, cout, V); // display the inital values
+
+        $monitor("%0t A=%h, B=%h, SUB=%b, ans=%h, cout=%b, V=%b", $time, A, B, SUB, ans, cout, V); // print whenever a value changes
+        $display("%0t A=%h, B=%h, SUB=%b, ans=%h, cout=%b, V=%b", $time, A, B, SUB, ans, cout, V); // print the inital values
         
         /* Addition tests */
         #10 A=32'h00000021; B=32'h00000022; SUB=0;  // 33 + 34 (simply adds 2 numbers)
@@ -147,13 +148,14 @@ module testbench();
         #10 A=32'h80000000; B=32'h00000001; SUB=1;  // min - 1
         
         // 5 No-overflow cases
-        #10 A=32'h5A3F2E1C; B=32'h25C1D1E3; SUB=0;  // 1514090012 + 633459171
+        #10 A=32'h6E3A9F1B; B=32'h11C560E4; SUB=0;  // 1849876251  + 298553572 
         #10 A=32'h3D4E5F6A; B=32'h42B1A095; SUB=0;  // 1028546410 + 1118937237 (adds to the max)
         #10 A=32'h6FABCDE1; B=32'h12345678; SUB=1;  // 1873530337 - 305419896 
         #10 A=32'h9F1E2D3C; B=32'h8A7B6C5D; SUB=1;  // -1625412292 - (-1971622819)
         #10 A=32'h56789ABC; B=32'hFEDCBA98; SUB=1;  // 1450744508 - (-19088744)
         
-        #10; // Required for verilog to show final values
-        $display($time,,"A=%h, B=%h, SUB=%b, ans=%h, cout=%b, V=%b", A, B, SUB, ans, cout, V);
+        #10; 
+        $display("%0t A=%h, B=%h, SUB=%b, ans=%h, cout=%b, V=%b", $time, A, B, SUB, ans, cout, V);
+        #10 $finish;
     end
 endmodule
