@@ -122,6 +122,43 @@ module testbench();
     wire cout, V;
     
     addsub32 adder(A, B, SUB, ans, cout, V);
+    // ===== Simple delay measurement (beginner-friendly) =====
+    time t_apply, t_settle, t_last_change;
+    reg [31:0] S_prev;
+    reg        V_prev;
+
+    // One "unit" of quiet before we call it settled.
+    // If your gate delays are #1 and your timescale is `1ns/1ns`, leave this = 1.
+    parameter STABLE_WIN = 1;
+
+    // Polling task: call right after you drive A,B,SUB for a new vector.
+    task measure_delay_after_apply;
+    begin
+      t_apply = $time;
+      t_last_change = $time;
+
+      // snapshot current outputs from the DUT
+      S_prev = ans;   // <-- your 32-bit sum bus (rename if yours differs)
+      V_prev = V;     // <-- your overflow flag
+
+      // Poll once per unit. If ans/V change, refresh t_last_change.
+      // When they stay unchanged for STABLE_WIN, print the delay and exit.
+      forever begin
+        #1;
+        if (ans !== S_prev || V !== V_prev) begin
+          S_prev = ans;
+          V_prev = V;
+          t_last_change = $time;
+        end
+        if (($time - t_last_change) >= STABLE_WIN) begin
+          t_settle = $time;
+          $display("DELAY A=%h B=%h SUB=%b  delay=%0t (units)",
+                   A, B, SUB, (t_settle - t_apply));
+          disable measure_delay_after_apply; // exit the task
+        end
+      end
+    end
+    endtask
     
     initial begin
 
@@ -129,33 +166,50 @@ module testbench();
         $display("%0t A=%h, B=%h, SUB=%b, ans=%h, cout=%b, V=%b", $time, A, B, SUB, ans, cout, V); // print the inital values
         
         /* Addition tests */
-        #10 A=32'h00000021; B=32'h00000022; SUB=0;  // 33 + 34 (simply adds 2 numbers)
-        #10 A=32'hF1E3B1BF; B=32'h00FBDBFD; SUB=0;  // -236736065 + 16505853 (adds a neg and pos number)  
-        #10 A=32'hBBBBBBBB; B=32'h44444444; SUB=0;  // 1011 + 0100 (should make all the bits 1)
-        #10 A=32'h00010000; B=32'h0000FFFF; SUB=0;  // 65536 + 65535 (forces the carry to go thru only the upper 16 bits)
-        #10 A=32'h3C89EEBD; B=32'h37FFDF35; SUB=0;  // 1015672509 + 939515701 (two random numbers)
+        #10 A=32'h00000021; B=32'h00000022; SUB=0; measure_delay_after_apply();  // 33 + 34 (simply adds 2 numbers)
+        #200 // spacing
+        #10 A=32'hF1E3B1BF; B=32'h00FBDBFD; SUB=0; measure_delay_after_apply(); // -236736065 + 16505853 (adds a neg and pos number)  
+        #200
+        #10 A=32'hBBBBBBBB; B=32'h44444444; SUB=0; measure_delay_after_apply(); // 1011 + 0100 (should make all the bits 1)
+        #200
+        #10 A=32'h00010000; B=32'h0000FFFF; SUB=0; measure_delay_after_apply(); // 65536 + 65535 (forces the carry to go thru only the upper 16 bits)
+        #200
+        #10 A=32'h3C89EEBD; B=32'h37FFDF35; SUB=0; measure_delay_after_apply(); // 1015672509 + 939515701 (two random numbers)
 
         
         // 5 Subtraction tests  
-        #10 A=32'h4D72BA7C; B=32'hD0991D68; SUB=1;  // 1299364476 - (-795271832) (subtract a pos nnumber by a neg number)
-        #10 A=32'hFFFFFFFF; B=32'h13B72214; SUB=1;  // -1 - 330768916  (subtracts -1 by a random pos number)
-        #10 A=32'hC5834557; B=32'hD08052AB; SUB=1;  // -981252777  - (-796896597) (subtracts 2 random negative numbers)
-        #10 A=32'h66CDA371; B=32'h1B786DEB; SUB=1;  //  1724752753 - 460877291 (simple subtract)
-        #10 A=32'h336FB7E5; B=32'h336FB7E5; SUB=1;  // 862959589 - 862959589 (subtracts 2 of the same number [should be 0])
+        #10 A=32'h4D72BA7C; B=32'hD0991D68; SUB=1; measure_delay_after_apply(); // 1299364476 - (-795271832) (subtract a pos nnumber by a neg number)
+        #200
+        #10 A=32'hFFFFFFFF; B=32'h13B72214; SUB=1; measure_delay_after_apply(); // -1 - 330768916  (subtracts -1 by a random pos number)
+        #200
+        #10 A=32'hC5834557; B=32'hD08052AB; SUB=1; measure_delay_after_apply(); // -981252777  - (-796896597) (subtracts 2 random negative numbers)
+        #200
+        #10 A=32'h66CDA371; B=32'h1B786DEB; SUB=1; measure_delay_after_apply(); //  1724752753 - 460877291 (simple subtract)
+        #200
+        #10 A=32'h336FB7E5; B=32'h336FB7E5; SUB=1; measure_delay_after_apply(); // 862959589 - 862959589 (subtracts 2 of the same number [should be 0])
         
         // 5 Overflow cases
-        #10 A=32'h7FFFFFFF; B=32'h00000001; SUB=0;  // max + 1 (overflows thru all the adders)
-        #10 A=32'h784EBA56; B=32'h7B5140F2; SUB=0;  // 2018425430 + 2068922610 (adds 2 very large numbers that exceed the max)
-        #10 A=32'h84AEBF0E; B=32'h87B145AA; SUB=0;  // -2068922610 + (-2018425430) (same as above but with neg numbers)
-        #10 A=32'h423F8B6B; B=32'hC24075EB; SUB=1;  // 1111676011 - (-1035807637)
-        #10 A=32'h80000000; B=32'h00000001; SUB=1;  // min - 1
+        #10 A=32'h7FFFFFFF; B=32'h00000001; SUB=0; measure_delay_after_apply(); // max + 1 (overflows thru all the adders)
+        #200
+        #10 A=32'h784EBA56; B=32'h7B5140F2; SUB=0; measure_delay_after_apply(); // 2018425430 + 2068922610 (adds 2 very large numbers that exceed the max)
+        #200
+        #10 A=32'h84AEBF0E; B=32'h87B145AA; SUB=0; measure_delay_after_apply(); // -2068922610 + (-2018425430) (same as above but with neg numbers)
+        #200
+        #10 A=32'h423F8B6B; B=32'hC24075EB; SUB=1; measure_delay_after_apply(); // 1111676011 - (-1035807637)
+        #200
+        #10 A=32'h80000000; B=32'h00000001; SUB=1; measure_delay_after_apply(); // min - 1
         
         // 5 No-overflow cases
-        #10 A=32'h6E3A9F1B; B=32'h11C560E4; SUB=0;  // 1849876251  + 298553572 
-        #10 A=32'h7FFFFFFF; B=32'h80000000; SUB=1;  // Max - min
-        #10 A=32'h6FABCDE1; B=32'h12345678; SUB=1;  // 1873530337 - 305419896 
-        #10 A=32'h9F1E2D3C; B=32'h8A7B6C5D; SUB=1;  // -1625412292 - (-1971622819)
-        #10 A=32'h56789ABC; B=32'hFEDCBA98; SUB=1;  // 1450744508 - (-19088744)
+        #10 A=32'h6E3A9F1B; B=32'h11C560E4; SUB=0; measure_delay_after_apply(); // 1849876251  + 298553572 
+        #200
+        #10 A=32'h7FFFFFFF; B=32'h80000000; SUB=1; measure_delay_after_apply(); // Max - min
+        #200
+        #10 A=32'h6FABCDE1; B=32'h12345678; SUB=1; measure_delay_after_apply(); // 1873530337 - 305419896 
+        #200
+        #10 A=32'h9F1E2D3C; B=32'h8A7B6C5D; SUB=1; measure_delay_after_apply(); // -1625412292 - (-1971622819)
+        #200
+        #10 A=32'h56789ABC; B=32'hFEDCBA98; SUB=1; measure_delay_after_apply(); // 1450744508 - (-19088744)
+        #200
         
         #10; 
         $display("%0t A=%h, B=%h, SUB=%b, ans=%h, cout=%b, V=%b", $time, A, B, SUB, ans, cout, V);
