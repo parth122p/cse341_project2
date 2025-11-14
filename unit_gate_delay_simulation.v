@@ -139,7 +139,7 @@ module testbench();
         // 5 Subtraction tests  
         #10 A=32'h4D72BA7C; B=32'hD0991D68; SUB=1;  // 1299364476 - (-795271832) (subtract a pos nnumber by a neg number)
         #10 A=32'hFFFFFFFF; B=32'h13B72214; SUB=1;  // -1 - 330768916  (subtracts -1 by a random pos number)
-        #10 A=32'hFB282E57; B=32'hD08052AB; SUB=1;  // -81252777  - (-796896597) (subtracts 2 random negative numbers)
+        #10 A=32'hC5834557; B=32'hD08052AB; SUB=1;  // -981252777  - (-796896597) (subtracts 2 random negative numbers)
         #10 A=32'h66CDA371; B=32'h1B786DEB; SUB=1;  //  1724752753 - 460877291 (simple subtract)
         #10 A=32'h336FB7E5; B=32'h336FB7E5; SUB=1;  // 862959589 - 862959589 (subtracts 2 of the same number [should be 0])
         
