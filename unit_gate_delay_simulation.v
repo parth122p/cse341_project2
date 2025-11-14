@@ -147,7 +147,7 @@ module testbench();
         #10 A=32'h7FFFFFFF; B=32'h00000001; SUB=0;  // max + 1 (overflows thru all the adders)
         #10 A=32'h784EBA56; B=32'h7B5140F2; SUB=0;  // 2018425430 + 2068922610 (adds 2 very large numbers that exceed the max)
         #10 A=32'h84AEBF0E; B=32'h87B145AA; SUB=0;  // -2068922610 + (-2018425430) (same as above but with neg numbers)
-        #10 A=32'h7FFFFFFF; B=32'h80000000; SUB=1;  // max - min 
+        #10 A=32'h423F8B6B; B=32'hC24075EB; SUB=1;  // 1111676011 - (-1035807637)
         #10 A=32'h80000000; B=32'h00000001; SUB=1;  // min - 1
         
         // 5 No-overflow cases
