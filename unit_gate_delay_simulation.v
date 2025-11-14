@@ -152,7 +152,7 @@ module testbench();
         
         // 5 No-overflow cases
         #10 A=32'h6E3A9F1B; B=32'h11C560E4; SUB=0;  // 1849876251  + 298553572 
-        #10 A=32'h3D4E5F6A; B=32'h42B1A095; SUB=0;  // 1028546410 + 1118937237 (adds to the max)
+        #10 A=32'h7FFFFFFF; B=32'h80000000; SUB=0;  // Max - min
         #10 A=32'h6FABCDE1; B=32'h12345678; SUB=1;  // 1873530337 - 305419896 
         #10 A=32'h9F1E2D3C; B=32'h8A7B6C5D; SUB=1;  // -1625412292 - (-1971622819)
         #10 A=32'h56789ABC; B=32'hFEDCBA98; SUB=1;  // 1450744508 - (-19088744)
