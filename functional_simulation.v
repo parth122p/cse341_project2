@@ -122,8 +122,8 @@ module testbench();
     
     initial begin
 
-        $monitor("%0t A=%h, B=%h, SUB=%b, ans=%h, cout=%b, V=%b", $time, A, B, SUB, ans, cout, V); // print whenever a value changes
-        $display("%0t A=%h, B=%h, SUB=%b, ans=%h, cout=%b, V=%b", $time, A, B, SUB, ans, cout, V); // print the inital values
+        $monitor("%0t A=%08h, B=%08h, SUB=%b, ans=%08h, cout=%b, V=%b", $time, A, B, SUB, ans, cout, V); // print whenever a value changes
+        $display("%0t A=%08h, B=%08h, SUB=%b, ans=%08h, cout=%b, V=%b", $time, A, B, SUB, ans, cout, V); // print the inital values
         
         /* Addition tests */
         #10 A=32'h00000021; B=32'h00000022; SUB=0;  // 33 + 34 (simply adds 2 numbers)
@@ -155,7 +155,7 @@ module testbench();
         #10 A=32'h56789ABC; B=32'hFEDCBA98; SUB=1;  // 1450744508 - (-19088744)
         
         #10; 
-        $display("%0t A=%h, B=%h, SUB=%b, ans=%h, cout=%b, V=%b", $time, A, B, SUB, ans, cout, V);
+        $display("%0t A=%08h, B=%08h, SUB=%b, ans=%08h, cout=%b, V=%b", $time, A, B, SUB, ans, cout, V);
         #10 $finish;
     end
 endmodule
