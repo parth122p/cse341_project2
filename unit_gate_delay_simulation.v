@@ -236,7 +236,7 @@ module testbench();
         
         #10;                          
         t0 = $time;
-        #10 A=32'h7FFFFFFF; B=32'h80000000; SUB=1;   // Max - min     
+        #10 A=32'h7FFFFFFF; B=32'h80000000; SUB=0;   // Max + min     
         #70;
         $display("Test 17: %0t", $time - t0);
         
