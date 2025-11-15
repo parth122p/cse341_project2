@@ -130,7 +130,7 @@ module testbench();
     end
 
     initial begin
-        $monitor("%0t A=%h B=%h SUB=%b ans=%h cout=%b V=%b", $time, A, B, SUB, ans, cout, V);
+        $monitor("%0t A=%08h B=%08h SUB=%b ans=%08h cout=%b V=%b", $time, A, B, SUB, ans, cout, V);
         
         /* Addition tests */
         #10; // spacing before first vector
@@ -259,7 +259,7 @@ module testbench();
         $display("Test 20: %0t", $time - t0);
         
         #10; 
-        $display("%0t A=%h, B=%h, SUB=%b, ans=%h, cout=%b, V=%b", $time, A, B, SUB, ans, cout, V);
+        $display("%0t A=%08h, B=%08h, SUB=%b, ans=%08h, cout=%b, V=%b", $time, A, B, SUB, ans, cout, V);
         #10 $finish;
     end
 endmodule
