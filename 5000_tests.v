@@ -28,18 +28,27 @@ module testbench5000();
         delay = $fopen("5000_Delays.txt", "w");
         #1
         
+        A = $random;
+        B = $random; 
+        SUB = $random % 2;
+        apply = $time;
+        change = $time
+        #10; // gives it time to set
+
         // Run 5000 random tests
         for (i = 0; i < 5000; i = i + 1) begin
-            #10;
+            
+            $fwrite(delay, "%0d\n", ((change - apply) + 1)); // calculate the delay just like how i did it by hand on vapor view
+            
             A = $random;
             B = $random; 
             SUB = $random % 2;
             apply = $time;
-            #70; // gives it time to set
-
-            $fwrite(delay, "%0d\n", ((change - apply) + 1)); // calculate the delay just like how i did it by hand on vapor view
+            #10; // gives it time to set
         end
-
+        
+        #100
+        $fwrite(delay, "%0d\n", ((change - apply) + 1));
         $fclose(delay);
         $finish;
     end
