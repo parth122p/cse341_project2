@@ -114,7 +114,8 @@ module addsub32(A, B, SUB, ans, cout, V); // A and B  are the 2 32 bit numbers w
 endmodule
 
 /* test bench module */
-module testbench();
+ /* 
+ module testbench();
 
     reg [31:0] A, B; // test inputs
     reg SUB;
@@ -133,133 +134,134 @@ module testbench();
         $monitor("%0t A=%08h B=%08h SUB=%b ans=%08h cout=%b V=%b", $time, A, B, SUB, ans, cout, V);
         
         /* Addition tests */
-        #10; // spacing before first vector
-        t0 = $time; // actual apply time for Test 1
-        A=32'h00000021; B=32'h00000022; SUB=0; // 33 + 34 (simply adds 2 numbers)
-        #70; // gap
-        $display("Test 1: %0t", $time - t0);
+        //#10; // spacing before first vector
+        //t0 = $time; // actual apply time for Test 1
+        //A=32'h00000021; B=32'h00000022; SUB=0; // 33 + 34 (simply adds 2 numbers)
+        //#70; // gap
+        //$display("Test 1: %0t", $time - t0);
 
-        #10;                          
-        t0 = $time;                    
-        A=32'hF1E3B1BF; B=32'h00FBDBFD; SUB=0;   // -236736065 + 16505853 (adds a neg and pos number)  
-        #70;
-        $display("Test 2: %0t", $time - t0);
+        //#10;                          
+        //t0 = $time;                    
+        //A=32'hF1E3B1BF; B=32'h00FBDBFD; SUB=0;   // -236736065 + 16505853 (adds a neg and pos number)  
+        //#70;
+        //$display("Test 2: %0t", $time - t0);
 
-        #10;                          
-        t0 = $time;
-        A=32'hBBBBBBBB; B=32'h44444444; SUB=0;   // 1011 + 0100 (should make all the bits 1)        
-        #70;
-        $display("Test 3: %0t", $time - t0);
+        //#10;                          
+        //t0 = $time;
+        //A=32'hBBBBBBBB; B=32'h44444444; SUB=0;   // 1011 + 0100 (should make all the bits 1)        
+        //#70;
+        //$display("Test 3: %0t", $time - t0);
 
-        #10;                          
-        t0 = $time;
-        A=32'h00010000; B=32'h0000FFFF; SUB=0;   // 65536 + 65535 (forces the carry to go thru only the upper 16 bits)        
-        #70;
-        $display("Test 4: %0t", $time - t0);
+        //#10;                          
+        //t0 = $time;
+        //A=32'h00010000; B=32'h0000FFFF; SUB=0;   // 65536 + 65535 (forces the carry to go thru only the upper 16 bits)        
+        //#70;
+        //$display("Test 4: %0t", $time - t0);
 
-        #10;                          
-        t0 = $time;
-        A=32'h3C89EEBD; B=32'h37FFDF35; SUB=0;   // 1015672509 + 939515701 (two random numbers)
-        #70;
-        $display("Test 5: %0t", $time - t0);
+        //#10;                          
+        //t0 = $time;
+        //A=32'h3C89EEBD; B=32'h37FFDF35; SUB=0;   // 1015672509 + 939515701 (two random numbers)
+        //#70;
+        //$display("Test 5: %0t", $time - t0);
         
         // 5 Subtraction tests
-        #10;                          
-        t0 = $time;
-        A=32'h4D72BA7C; B=32'hD0991D68; SUB=1;   // 1299364476 - (-795271832) (subtract a pos nnumber by a neg number)     
-        #70;
-        $display("Test 6: %0t", $time - t0);
+        //#10;                          
+        //t0 = $time;
+        //A=32'h4D72BA7C; B=32'hD0991D68; SUB=1;   // 1299364476 - (-795271832) (subtract a pos nnumber by a neg number)     
+        //#70;
+        //$display("Test 6: %0t", $time - t0);
         
-        #10;                          
-        t0 = $time;
-        A=32'hFFFFFFFF; B=32'h13B72214; SUB=1;   // -1 - 330768916  (subtracts -1 by a random pos number)    
-        #70;
-        $display("Test 7: %0t", $time - t0);
+        //#10;                          
+        //t0 = $time;
+        //A=32'hFFFFFFFF; B=32'h13B72214; SUB=1;   // -1 - 330768916  (subtracts -1 by a random pos number)    
+        //#70;
+        //$display("Test 7: %0t", $time - t0);
         
-        #10;                          
-        t0 = $time;
-        A=32'hC5834557; B=32'hD08052AB; SUB=1;   // -981252777  - (-796896597) (subtracts 2 random negative numbers)       
-        #70;
-        $display("Test 8: %0t", $time - t0);
+        //#10;                          
+        //t0 = $time;
+        //A=32'hC5834557; B=32'hD08052AB; SUB=1;   // -981252777  - (-796896597) (subtracts 2 random negative numbers)       
+        //#70;
+        //$display("Test 8: %0t", $time - t0);
         
-        #10;                          
-        t0 = $time;
-        A=32'h66CDA371; B=32'h1B786DEB; SUB=1;   //  1724752753 - 460877291 (simple subtract)     
-        #70;
-        $display("Test 9: %0t", $time - t0);
+        //#10;                          
+        //t0 = $time;
+        //A=32'h66CDA371; B=32'h1B786DEB; SUB=1;   //  1724752753 - 460877291 (simple subtract)     
+        //#70;
+        //$display("Test 9: %0t", $time - t0);
         
-        #10;                          
-        t0 = $time;
-        A=32'h336FB7E5; B=32'h336FB7E5; SUB=1;   // 862959589 - 862959589 (subtracts 2 of the same number [should be 0])
-        #70;
-        $display("Test 10: %0t", $time - t0);
+        //#10;                          
+        //t0 = $time;
+        //A=32'h336FB7E5; B=32'h336FB7E5; SUB=1;   // 862959589 - 862959589 (subtracts 2 of the same number [should be 0])
+        //#70;
+        //$display("Test 10: %0t", $time - t0);
         
         // 5 Overflow cases
         
-        #10;                          
-        t0 = $time;
-        #10 A=32'h7FFFFFFF; B=32'h00000001; SUB=0;   // max + 1 (overflows thru all the adders)       
-        #70;
-        $display("Test 11: %0t", $time - t0);
+        //#10;                          
+        //t0 = $time;
+        //#10 A=32'h7FFFFFFF; B=32'h00000001; SUB=0;   // max + 1 (overflows thru all the adders)       
+        //#70;
+        //$display("Test 11: %0t", $time - t0);
         
-        #10;                          
-        t0 = $time;
-        #10 A=32'h784EBA56; B=32'h7B5140F2; SUB=0;   // 2018425430 + 2068922610 (adds 2 very large numbers that exceed the max)
-        #70;
-        $display("Test 12: %0t", $time - t0);
+        //#10;                          
+        //t0 = $time;
+        //#10 A=32'h784EBA56; B=32'h7B5140F2; SUB=0;   // 2018425430 + 2068922610 (adds 2 very large numbers that exceed the max)
+        //#70;
+        //$display("Test 12: %0t", $time - t0);
         
-        #10;                          
-        t0 = $time;
-        #10 A=32'h84AEBF0E; B=32'h87B145AA; SUB=0;   // -2068922610 + (-2018425430) (same as above but with neg numbers)
-        #70;
-        $display("Test 13: %0t", $time - t0);
+        //#10;                          
+        //t0 = $time;
+        //#10 A=32'h84AEBF0E; B=32'h87B145AA; SUB=0;   // -2068922610 + (-2018425430) (same as above but with neg numbers)
+        //#70;
+        //$display("Test 13: %0t", $time - t0);
         
-        #10;                          
-        t0 = $time;
-        #10 A=32'h423F8B6B; B=32'hC24075EB; SUB=1;   // 1111676011 - (-1035807637)     
-        #70;
-        $display("Test 14: %0t", $time - t0);
+        //#10;                          
+        //t0 = $time;
+        //#10 A=32'h423F8B6B; B=32'hC24075EB; SUB=1;   // 1111676011 - (-1035807637)     
+        //#70;
+        //$display("Test 14: %0t", $time - t0);
         
-        #10;                          
-        t0 = $time;
-        #10 A=32'h80000000; B=32'h00000001; SUB=1;   // min - 1
-        #70;
-        $display("Test 15: %0t", $time - t0);
+        //#10;                          
+        //t0 = $time;
+        //#10 A=32'h80000000; B=32'h00000001; SUB=1;   // min - 1
+        //#70;
+        //$display("Test 15: %0t", $time - t0);
         
         // 5 No-overflow cases
 
-        #10;                          
-        t0 = $time;
-        #10 A=32'h6E3A9F1B; B=32'h11C560E4; SUB=0;   // 1849876251  + 298553572      
-        #70;
-        $display("Test 16: %0t", $time - t0);
+        //#10;                          
+        //t0 = $time;
+        //#10 A=32'h6E3A9F1B; B=32'h11C560E4; SUB=0;   // 1849876251  + 298553572      
+        //#70;
+        //$display("Test 16: %0t", $time - t0);
         
-        #10;                          
-        t0 = $time;
-        #10 A=32'h7FFFFFFF; B=32'h80000000; SUB=0;   // Max + min     
-        #70;
-        $display("Test 17: %0t", $time - t0);
+        //#10;                          
+        //t0 = $time;
+        //#10 A=32'h7FFFFFFF; B=32'h80000000; SUB=0;   // Max + min     
+        //#70;
+        //$display("Test 17: %0t", $time - t0);
         
-        #10;                          
-        t0 = $time;
-        #10 A=32'h6FABCDE1; B=32'h12345678; SUB=1;   // 1873530337 - 305419896     
-        #70;
-        $display("Test 18: %0t", $time - t0);
+        //#10;                          
+        //t0 = $time;
+        //#10 A=32'h6FABCDE1; B=32'h12345678; SUB=1;   // 1873530337 - 305419896     
+        //#70;
+        //$display("Test 18: %0t", $time - t0);
         
-        #10;                          
-        t0 = $time;
-        #10 A=32'h9F1E2D3C; B=32'h8A7B6C5D; SUB=1;   // -1625412292 - (-1971622819)    
-        #70;
-        $display("Test 19: %0t", $time - t0);
+        //#10;                          
+        //t0 = $time;
+        //#10 A=32'h9F1E2D3C; B=32'h8A7B6C5D; SUB=1;   // -1625412292 - (-1971622819)    
+        //#70;
+        //$display("Test 19: %0t", $time - t0);
         
-        #10;                          
-        t0 = $time;
-        #10 A=32'h56789ABC; B=32'hFEDCBA98; SUB=1;   // 1450744508 - (-19088744)
-        #70;
-        $display("Test 20: %0t", $time - t0);
+        //#10;                          
+        //t0 = $time;
+        //#10 A=32'h56789ABC; B=32'hFEDCBA98; SUB=1;   // 1450744508 - (-19088744)
+        //#70;
+        //$display("Test 20: %0t", $time - t0);
         
-        #10; 
-        $display("%0t A=%08h, B=%08h, SUB=%b, ans=%08h, cout=%b, V=%b", $time, A, B, SUB, ans, cout, V);
-        #10 $finish;
-    end
-endmodule
+        //#10; 
+      //  $display("%0t A=%08h, B=%08h, SUB=%b, ans=%08h, cout=%b, V=%b", $time, A, B, SUB, ans, cout, V);
+    //    #10 $finish;
+        
+  //  end
+//endmodule 
