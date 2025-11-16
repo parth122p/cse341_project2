@@ -26,13 +26,13 @@ module testbench5000();
         SUB = 1'bx;
 
         delay = $fopen("5000_Delays.txt", "w");
-        #1
+        #1;
         
         A = $random;
         B = $random; 
         SUB = $random % 2;
         apply = $time;
-        change = $time
+        change = $time;
         #10; // gives it time to set
 
         // Run 5000 random tests
@@ -46,8 +46,8 @@ module testbench5000();
             apply = $time;
             #10; // gives it time to set
         end
-        
-        #100
+
+        #100;
         $fwrite(delay, "%0d\n", ((change - apply) + 1));
         $fclose(delay);
         $finish;
