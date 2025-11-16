@@ -33,7 +33,7 @@ module testbench5000();
         SUB = $random % 2;
         apply = $time;
         change = $time;
-        #10; // gives it time to set
+        #100; // gives it time to set
 
         // Run 5000 random tests
         for (i = 0; i < 5000; i = i + 1) begin
@@ -44,7 +44,7 @@ module testbench5000();
             B = $random; 
             SUB = $random % 2;
             apply = $time;
-            #10; // gives it time to set
+            #100; // gives it time to set
         end
 
         #100;
