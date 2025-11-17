@@ -21,34 +21,22 @@ module testbench5000();
 
     initial begin
         
-        A = 32'hxxxxxxxx;
-        B = 32'hxxxxxxxx;
-        SUB = 1'bx;
-
         delay = $fopen("5000_Delays.txt", "w");
-        #1;
-        
-        A = $random;
-        B = $random; 
-        SUB = $random % 2;
-        apply = $time;
-        change = $time;
-        #100; // gives it time to set
-
+        #1
         // Run 5000 random tests
         for (i = 0; i < 5000; i = i + 1) begin
-            
-            $fwrite(delay, "%0d\n", ((change - apply) + 1)); // calculate the delay just like how i did it by hand on vapor view
-            
+                        
             A = $random;
             B = $random; 
             SUB = $random % 2;
             apply = $time;
-            #100; // gives it time to set
+            change= $time;
+
+            #100
+
+            $fwrite(delay, "%0d\n", ((change - apply) + 1));
         end
 
-        #100;
-        $fwrite(delay, "%0d\n", ((change - apply) + 1));
         $fclose(delay);
         $finish;
     end

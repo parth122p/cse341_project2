@@ -114,7 +114,7 @@ module addsub32(A, B, SUB, ans, cout, V); // A and B  are the 2 32 bit numbers w
 endmodule
 
 /* test bench module */
- /* 
+
  module testbench();
 
     reg [31:0] A, B; // test inputs
